@@ -4,6 +4,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   devtool: 'eval',
+  performance: {
+    hints: false
+  },
   entry: [
     'babel-polyfill',
     'webpack-hot-middleware/client',
