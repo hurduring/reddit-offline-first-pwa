@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import { createStore, compose } from 'redux';
 import rootReducer from './redux/rootReducer';
 
-const store = createStore(rootReducer, {}, compose(window.devToolsExtension()));
+const store = createStore(rootReducer);
 
 const rootEl = document.getElementById('root');
 
@@ -18,7 +18,7 @@ if (module.hot) {
       rootEl
     )
   });
-  module.hot.accepts('./redux/rootReducer', () => store.replaceReducer(rootReducer));
+  module.hot.accept('./redux/rootReducer', () => store.replaceReducer(rootReducer));
 }
 
 ReactDOM.render(
