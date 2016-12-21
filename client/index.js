@@ -2,12 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Routes from './routes';
 import { Provider } from 'react-redux'
-import { createStore, compose } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import rootReducer from './redux/rootReducer';
-
-const store = createStore(rootReducer);
+import createSagaMiddleware, { END } from 'redux-saga';
+import sagas from './sagas';
 
 const rootEl = document.getElementById('root');
+
+const sagaMiddleware = createSagaMiddleware();
+const store = createStore(rootReducer, {}, applyMiddleware(sagaMiddleware));
+
+sagaMiddleware.run(sagas);
 
 if (module.hot) {
   module.hot.accept('./routes', () => {
@@ -19,6 +24,10 @@ if (module.hot) {
     )
   });
   module.hot.accept('./redux/rootReducer', () => store.replaceReducer(rootReducer));
+  module.hot.accept('./sagas', () => {
+    store.dispatch(END);
+    sagaMiddleware.run(sagas);
+  })
 }
 
 ReactDOM.render(

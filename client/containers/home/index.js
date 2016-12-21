@@ -2,13 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { actions } from '../../redux/actions';
 
-const Home = ({ counter, increment, decrement}) => (
+const Home = ({ counter, increment, decrement, incrementAsync}) => (
   <div>
     HOME123fdas
     <p>
       {counter}
     </p>
-    <button onClick={() => increment()}>increment</button>
+    <button onClick={() => incrementAsync()}>increment</button>
     <button onClick={() => decrement()}>decrement</button>
   </div>
 );
