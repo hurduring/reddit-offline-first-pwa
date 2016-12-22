@@ -20,9 +20,9 @@ module.exports = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, '../index.html'),
-    })
+    // new HtmlWebpackPlugin({
+    //   template: path.resolve(__dirname, '../index.html'),
+    // })
   ],
   module: {
     noParse: /\.min\.js/,

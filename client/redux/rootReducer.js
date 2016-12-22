@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-const counter = (state = 1, action) => {
+const counter = (state = 10, action) => {
   switch (action.type) {
     case 'INCREMENT':
       return state + 100;
