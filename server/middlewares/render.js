@@ -32,6 +32,7 @@ router.get('*', (req, res) => {
     } else if (renderProps) {
 
       const state = store.getState();
+      const inlineStyles = global.inlineCss;
 
       const html = renderToStaticMarkup((
         <html lang="en">
@@ -42,6 +43,7 @@ router.get('*', (req, res) => {
           window.__CLIENT__ = true
         ` }}
           />
+          {<style type="text/css" id="SSRStyles">{inlineStyles}</style>}
         </head>
         <body>
         <div id="root">
@@ -49,7 +51,10 @@ router.get('*', (req, res) => {
             <RouterContext {...renderProps} />
           </Provider>
         </div>
-        {scripts.map(s => <script key={s} src={`/${s}`} />)}
+        {scripts.map(s => <script key={s} src={`/${s}`}/>)}
+
+
+        {<script dangerouslySetInnerHTML={{ __html: 'document.getElementById("SSRStyles").remove()' }}/> }
         </body>
         </html>
       ))
