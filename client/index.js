@@ -1,12 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import routes from './routes';
-import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux';
 import rootReducer from './redux/rootReducer';
 import createSagaMiddleware, { END } from 'redux-saga';
-import { Router, browserHistory } from 'react-router';
 import sagas from './sagas';
+import App from './app';
 
 const rootEl = document.getElementById('root');
 
@@ -16,11 +14,9 @@ const store = createStore(rootReducer, window.__INITIAL_STATE__, applyMiddleware
 sagaMiddleware.run(sagas);
 
 if (module.hot) {
-  module.hot.accept('./routes', () => {
+  module.hot.accept('./app', () => {
     ReactDOM.render(
-      <Provider store={store}>
-         <Router routes={routes()} history={browserHistory} />
-      </Provider>,
+      <App store={store}/>,
       rootEl
     )
   });
@@ -32,8 +28,6 @@ if (module.hot) {
 }
 
 ReactDOM.render(
-  <Provider store={store}>
-     <Router routes={routes()} history={browserHistory} />
-  </Provider>,
+  <App store={store}/>,
   rootEl
 );
