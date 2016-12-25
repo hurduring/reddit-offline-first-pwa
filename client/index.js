@@ -19,7 +19,7 @@ if (module.hot) {
   module.hot.accept('./routes', () => {
     ReactDOM.render(
       <Provider store={store}>
-         <Router routes={routes(store)} history={browserHistory} />
+         <Router routes={routes()} history={browserHistory} />
       </Provider>,
       rootEl
     )
@@ -33,7 +33,7 @@ if (module.hot) {
 
 ReactDOM.render(
   <Provider store={store}>
-     <Router routes={routes(store)} history={browserHistory} />
+     <Router routes={routes()} history={browserHistory} />
   </Provider>,
   rootEl
 );

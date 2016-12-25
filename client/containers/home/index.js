@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { actions } from '../../redux/actions';
+import s from './styles.css';
 
-const Home = ({ counter, increment, decrement, incrementAsync}) => (
-  <div>
-    HOME123fdas
+const Home = ({ counter, increment, decrement, incrementAsync }) => (
+  <div className={s.root}>
+    fdsa
     <p>
       {counter}
     </p>

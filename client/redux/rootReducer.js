@@ -5,7 +5,7 @@ const counter = (state = 10, action) => {
     case 'INCREMENT':
       return state + 100;
     case 'DECREMENT':
-      return state - 2;
+      return state - 20;
     default:
       return state;
   }

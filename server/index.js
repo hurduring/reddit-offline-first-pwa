@@ -7,6 +7,26 @@ const webpack = require('webpack');
 const config = require('../build/webpack.config');
 const compiler = webpack(config);
 
+
+import sass from 'node-sass'
+import cssHook from 'css-modules-require-hook'
+
+const cssHookConfig = {
+  generateScopedName: '[name]__[local]',
+  extensions: ['.scss', '.css'],
+  preprocessCss: data => sass.renderSync({
+    data
+  }).css
+};
+
+cssHookConfig.processCss = (css = '') => {
+  if (!global.inlineCss) global.inlineCss = '';
+  global.inlineCss += css;
+};
+
+cssHook(cssHookConfig);
+
+
 const app = express();
 
 app.use(devMiddleware(compiler, { noInfo: true, serverSideRender: true }));
