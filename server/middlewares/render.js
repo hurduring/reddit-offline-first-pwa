@@ -18,11 +18,18 @@ router.get('*', (req, res) => {
   const store = createStore(rootReducer, {}, applyMiddleware(sagaMiddleware));
   sagaMiddleware.run(rootSaga);
 
-  let mainChunk = res.locals.webpackStats.toJson().assetsByChunkName.main;
+  let scripts = [], styles = [];
 
+  if (process.env.NODE_ENV === 'development') {
+    let mainChunk = res.locals.webpackStats.toJson().assetsByChunkName.main
+    if (!Array.isArray(mainChunk)) mainChunk = [mainChunk]
+    scripts = scripts.concat(mainChunk.filter(e => e.slice(-3) === '.js'))
+    styles = styles.concat(mainChunk.filter(e => e.slice(-4) === '.css'))
+  } else {
+    scripts = ['main.js']
+    styles = ['styles.css']
+  }
 
-  if (!Array.isArray(mainChunk)) mainChunk = [mainChunk];
-  const scripts = mainChunk.filter(e => e.slice(-3) === '.js');
 
   match({ routes: routes(store), location: req.url }, (err, redirectLocation, renderProps) => {
     if (err) {
@@ -44,6 +51,7 @@ router.get('*', (req, res) => {
         ` }}
           />
           {<style type="text/css" id="SSRStyles">{inlineStyles}</style>}
+          {styles.map(s => <link key={s} rel="stylesheet" href={`/${s}`}/>)}
         </head>
         <body>
         <div id="root">
