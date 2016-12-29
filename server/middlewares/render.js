@@ -6,71 +6,77 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import createSagaMiddleware from 'redux-saga';
 import rootReducer from '../../client/redux/rootReducer';
 import { createStore, applyMiddleware } from 'redux';
+import purgeCache from '../utils/purge-cache';
 
 const router = express.Router();
 
 router.get('*', (req, res) => {
 
-  const rootSaga = require('../../client/sagas').default;
-  const routes = require('../../client/routes').default;
+    let scripts = [], styles = [];
 
-  const sagaMiddleware = createSagaMiddleware();
-  const store = createStore(rootReducer, {}, applyMiddleware(sagaMiddleware));
-  sagaMiddleware.run(rootSaga);
+    if (process.env.NODE_ENV === 'development') {
+      [
+        '../../client/sagas',
+        '../../client/routes',
+      ].forEach(purgeCache);
 
-  let scripts = [], styles = [];
+      let mainChunk = res.locals.webpackStats.toJson().assetsByChunkName.main
+      if (!Array.isArray(mainChunk)) mainChunk = [mainChunk]
+      scripts = scripts.concat(mainChunk.filter(e => e.slice(-3) === '.js'))
+      styles = styles.concat(mainChunk.filter(e => e.slice(-4) === '.css'))
+    } else {
+      scripts = ['main.js']
+      styles = ['styles.css']
+    }
 
-  if (process.env.NODE_ENV === 'development') {
-    let mainChunk = res.locals.webpackStats.toJson().assetsByChunkName.main
-    if (!Array.isArray(mainChunk)) mainChunk = [mainChunk]
-    scripts = scripts.concat(mainChunk.filter(e => e.slice(-3) === '.js'))
-    styles = styles.concat(mainChunk.filter(e => e.slice(-4) === '.css'))
-  } else {
-    scripts = ['main.js']
-    styles = ['styles.css']
-  }
+    const rootSaga = require('../../client/sagas').default;
+    const routes = require('../../client/routes').default;
 
+    const sagaMiddleware = createSagaMiddleware();
+    const store = createStore(rootReducer, {}, applyMiddleware(sagaMiddleware));
+    sagaMiddleware.run(rootSaga);
 
-  match({ routes: routes(store), location: req.url }, (err, redirectLocation, renderProps) => {
-    if (err) {
-      res.status(500).send(err.message)
-    } else if (redirectLocation) {
-      res.redirect(302, redirectLocation.pathname + redirectLocation.search)
-    } else if (renderProps) {
+    match({ routes: routes(store), location: req.url }, (err, redirectLocation, renderProps) => {
+      if (err) {
+        res.status(500).send(err.message)
+      } else if (redirectLocation) {
+        res.redirect(302, redirectLocation.pathname + redirectLocation.search)
+      } else if (renderProps) {
 
-      const state = store.getState();
-      const inlineStyles = global.inlineCss;
+        const state = store.getState();
+        const inlineStyles = global.inlineCss;
 
-      const html = renderToStaticMarkup((
-        <html lang="en">
-        <head>
-          <script
-            dangerouslySetInnerHTML={{ __html: `
+        const html = renderToStaticMarkup((
+          <html lang="en">
+          <head>
+            <script
+              dangerouslySetInnerHTML={{ __html: `
           window.__INITIAL_STATE__ = ${JSON.stringify(state)}
           window.__CLIENT__ = true
         ` }}
-          />
-          {<style type="text/css" id="SSRStyles">{inlineStyles}</style>}
-          {styles.map(s => <link key={s} rel="stylesheet" href={`/${s}`}/>)}
-        </head>
-        <body>
-        <div id="root">
-          <Provider store={store}>
-            <RouterContext {...renderProps} />
-          </Provider>
-        </div>
-        {scripts.map(s => <script key={s} src={`/${s}`}/>)}
+            />
+            {<style type="text/css" id="SSRStyles">{inlineStyles}</style>}
+            {styles.map(s => <link key={s} rel="stylesheet" href={`/${s}`}/>)}
+          </head>
+          <body>
+          <div id="root">
+            <Provider store={store}>
+              <RouterContext {...renderProps} />
+            </Provider>
+          </div>
+          {scripts.map(s => <script key={s} src={`/${s}`}/>)}
 
 
-        {<script dangerouslySetInnerHTML={{ __html: 'document.getElementById("SSRStyles").remove()' }}/> }
-        </body>
-        </html>
-      ))
-      res.send(`<!doctype html>${html}`)
-    } else {
-      res.status(404).send('Not found')
-    }
-  })
-})
+          {<script dangerouslySetInnerHTML={{ __html: 'document.getElementById("SSRStyles").remove()' }}/> }
+          </body>
+          </html>
+        ))
+        res.send(`<!doctype html>${html}`)
+      } else {
+        res.status(404).send('Not found')
+      }
+    })
+  }
+)
 
 export default router

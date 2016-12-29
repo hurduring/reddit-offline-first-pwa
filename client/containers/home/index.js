@@ -5,7 +5,7 @@ import s from './styles.css';
 
 const Home = ({ counter, increment, decrement, incrementAsync }) => (
   <div className={s.root}>
-    dksajklfasdklj
+    fdasfsfs
     <p>
       {counter}
     </p>
