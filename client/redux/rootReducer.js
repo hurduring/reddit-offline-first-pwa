@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from 'redux'
 
 const counter = (state = 10, action) => {
   switch (action.type) {
@@ -9,8 +9,11 @@ const counter = (state = 10, action) => {
     default:
       return state;
   }
-};
+}
 
-export default combineReducers({
-  counter,
-});
+export default (asyncReducers = {}) => (
+  combineReducers({
+    counter,
+    ...asyncReducers,
+  })
+)

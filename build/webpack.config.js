@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   devtool: 'eval',
@@ -10,6 +9,7 @@ module.exports = {
   entry: [
     'babel-polyfill',
     'webpack-hot-middleware/client',
+    'react-hot-loader/patch',
     './client/index.js',
   ],
   output: {
@@ -20,9 +20,6 @@ module.exports = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
-    // new HtmlWebpackPlugin({
-    //   template: path.resolve(__dirname, '../index.html'),
-    // })
   ],
   module: {
     noParse: /\.min\.js/,

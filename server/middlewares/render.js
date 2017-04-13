@@ -4,7 +4,6 @@ import { Provider } from 'react-redux'
 import { match, RouterContext } from 'react-router'
 import { renderToStaticMarkup } from 'react-dom/server'
 import createSagaMiddleware from 'redux-saga';
-import rootReducer from '../../client/redux/rootReducer';
 import { createStore, applyMiddleware } from 'redux';
 import purgeCache from '../utils/purge-cache';
 
@@ -18,6 +17,7 @@ router.get('*', (req, res) => {
       [
         '../../client/sagas',
         '../../client/routes',
+        '../../client/redux/rootReducer',
       ].forEach(purgeCache);
 
       let mainChunk = res.locals.webpackStats.toJson().assetsByChunkName.main
@@ -31,9 +31,11 @@ router.get('*', (req, res) => {
 
     const rootSaga = require('../../client/sagas').default;
     const routes = require('../../client/routes').default;
+    const rootReducer = require('../../client/redux/rootReducer').default;
 
     const sagaMiddleware = createSagaMiddleware();
-    const store = createStore(rootReducer, {}, applyMiddleware(sagaMiddleware));
+    const store = createStore(rootReducer(), {}, applyMiddleware(sagaMiddleware));
+    store.runSaga = sagaMiddleware.run
     sagaMiddleware.run(rootSaga);
 
     match({ routes: routes(store), location: req.url }, (err, redirectLocation, renderProps) => {
@@ -50,13 +52,15 @@ router.get('*', (req, res) => {
           <html lang="en">
           <head>
             <script
-              dangerouslySetInnerHTML={{ __html: `
+              dangerouslySetInnerHTML={{
+                __html: `
           window.__INITIAL_STATE__ = ${JSON.stringify(state)}
           window.__CLIENT__ = true
-        ` }}
+        `
+              }}
             />
             {<style type="text/css" id="SSRStyles">{inlineStyles}</style>}
-            {styles.map(s => <link key={s} rel="stylesheet" href={`/${s}`}/>)}
+            {styles.map(s => <link key={s} rel="stylesheet" href={`/${s}`} />)}
           </head>
           <body>
           <div id="root">
@@ -64,10 +68,11 @@ router.get('*', (req, res) => {
               <RouterContext {...renderProps} />
             </Provider>
           </div>
-          {scripts.map(s => <script key={s} src={`/${s}`}/>)}
+          {scripts.map(s => <script key={s} src={`/${s}`} />)}
 
 
-          {<script dangerouslySetInnerHTML={{ __html: 'document.getElementById("SSRStyles").remove()' }}/> }
+          {<script
+            dangerouslySetInnerHTML={{ __html: 'document.getElementById("SSRStyles").remove()' }} /> }
           </body>
           </html>
         ))

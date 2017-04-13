@@ -13,6 +13,8 @@ const configProd = require('../build/webpack.config.prod');
 import sass from 'node-sass';
 import cssHook from 'css-modules-require-hook';
 
+import frontend from './routes/frontend'
+import react from './routes/react'
 
 if (process.env.NODE_ENV === 'development') {
   const compiler = webpack(config);
@@ -35,9 +37,13 @@ if (process.env.NODE_ENV === 'development') {
 
   const app = express();
 
+  app.use('/api/frontend', frontend)
+  app.use('/api/react', react)
+
   app.use(devMiddleware(compiler, { noInfo: true, serverSideRender: true }));
   app.use(hotMiddleware(compiler));
   app.use(renderMiddleware);
+
 
   app.listen(3000);
 
