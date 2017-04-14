@@ -1,19 +1,9 @@
 import { combineReducers } from 'redux'
-
-const counter = (state = 10, action) => {
-  switch (action.type) {
-    case 'INCREMENT':
-      return state + 100;
-    case 'DECREMENT':
-      return state - 20;
-    default:
-      return state;
-  }
-}
+import entities from './reducers/entities'
 
 export default (asyncReducers = {}) => (
   combineReducers({
-    counter,
+    entities,
     ...asyncReducers,
   })
 )

@@ -7,7 +7,7 @@ import createSagaMiddleware, { END } from 'redux-saga';
 import { AppContainer } from 'react-hot-loader'
 
 import rootReducer from './redux/rootReducer';
-import sagas from './sagas';
+import sagas from './redux/sagas';
 import App from './app';
 
 const rootEl = document.getElementById('root');
@@ -42,8 +42,8 @@ if (module.hot) {
     store.replaceReducer(newRootReducer())
   });
 
-  module.hot.accept('./sagas', () => {
-    const newSagas = require('./sagas').default
+  module.hot.accept('./redux/sagas', () => {
+    const newSagas = require('./redux/sagas').default
 
     store.dispatch(END);
     sagaMiddleware.run(newSagas);

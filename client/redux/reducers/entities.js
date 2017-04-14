@@ -1,11 +1,12 @@
-
+import { types } from '../actions/entities'
 
 export default (state = {}, action) => {
   switch (action.type) {
-    case 'INCREMENT':
-      return state + 100;
-    case 'DECREMENT':
-      return state - 20;
+    case types.SET_POSTS_ENTITY:
+      return {
+        ...state,
+        posts: action.payload,
+      }
     default:
       return state;
   }

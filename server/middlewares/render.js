@@ -29,7 +29,7 @@ router.get('*', (req, res) => {
       styles = ['styles.css']
     }
 
-    const rootSaga = require('../../client/sagas').default;
+    const rootSaga = require('../../client/redux/sagas').default;
     const routes = require('../../client/routes').default;
     const rootReducer = require('../../client/redux/rootReducer').default;
 
