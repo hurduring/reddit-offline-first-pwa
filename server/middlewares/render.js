@@ -15,7 +15,7 @@ router.get('*', (req, res) => {
 
     if (process.env.NODE_ENV === 'development') {
       [
-        '../../client/sagas',
+        '../../client/redux/sagas',
         '../../client/routes',
         '../../client/redux/rootReducer',
       ].forEach(purgeCache);

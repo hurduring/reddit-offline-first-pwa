@@ -4,6 +4,7 @@ module.exports = {
     "linebreak-style": "off",
     "react/jsx-filename-extension": "off",
     "semi": "off",
-    "global-require": "off"
+    "global-require": "off",
+    "import/prefer-default-export": "off",
   }
 };

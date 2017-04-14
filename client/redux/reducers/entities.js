@@ -5,7 +5,7 @@ export default (state = {}, action) => {
     case types.SET_POSTS_ENTITY:
       return {
         ...state,
-        posts: action.payload,
+        post: action.payload,
       }
     default:
       return state;

@@ -5,9 +5,9 @@ import { asyncWrapper as aw } from '../utils'
 
 const router = express.Router()
 
-router.get('/', aw(async (req, res, next) => {
+router.get('/:subreddit', aw(async (req, res, next) => {
 
-  const response = await request('https://reddit.com/r/frontend/hot.json')
+  const response = await request(`https://reddit.com/r/${req.params.subreddit}/hot.json`)
 
   res
     .set('content-type', 'application/json')

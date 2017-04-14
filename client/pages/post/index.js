@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 class Frontend extends Component {
   componentDidMount() {
-    fetch('/api/react')
+    fetch('/api/post')
       .then(res => res.json())
       .then(console.log)
   }

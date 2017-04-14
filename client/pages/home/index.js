@@ -6,7 +6,7 @@ import { Link } from 'react-router'
 const Home = ({ counter }) => (
   <div className={s.root}>
     <Link to={'/frontend'}>frontend link</Link>
-    <Link to={'/react'}>react link</Link>
+    <Link to={'/post'}>react link</Link>
   </div>
 );
 

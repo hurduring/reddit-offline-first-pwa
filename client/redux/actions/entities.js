@@ -3,7 +3,7 @@ export const types = {
 }
 
 export const actions = {
-  SET_POSTS_ENTITY(action) {
+  setPostsEntity(action) {
     return { type: types.SET_POSTS_ENTITY, payload: action };
   },
 }
