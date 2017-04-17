@@ -1,4 +1,6 @@
 import 'isomorphic-fetch'
+import * as OfflinePluginRuntime from 'offline-plugin/runtime'
+OfflinePluginRuntime.install()
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -9,6 +11,7 @@ import { AppContainer } from 'react-hot-loader'
 import rootReducer from './redux/rootReducer';
 import sagas from './redux/sagas';
 import App from './app';
+
 
 const rootEl = document.getElementById('root');
 
@@ -55,4 +58,8 @@ ReactDOM.render(
     <App store={store} />
   </AppContainer>,
   rootEl,
-);
+)
+
+
+
+

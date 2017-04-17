@@ -1,10 +1,11 @@
 const webpack = require('webpack');
 const path = require('path');
+const OfflinePlugin = require('offline-plugin')
 
 module.exports = {
   devtool: 'eval',
   performance: {
-    hints: false
+    hints: false,
   },
   entry: [
     'babel-polyfill',
@@ -20,6 +21,13 @@ module.exports = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
+    new OfflinePlugin({
+      publicPath: '/',
+      externals: [
+        '/',
+        '/posts/frontend',
+      ],
+    })
   ],
   module: {
     noParse: /\.min\.js/,
@@ -27,12 +35,12 @@ module.exports = {
       {
         test: /\.js$/,
         use: 'babel-loader',
-        include: path.resolve('./client')
+        include: path.resolve('./client'),
       },
       {
         test: /\.scss$|.css$/,
-        loaders: ['style-loader', 'css-loader?modules&localIdentName=[name]__[local]']
-      }
-    ]
-  }
+        loaders: ['style-loader', 'css-loader?modules&localIdentName=[name]__[local]'],
+      },
+    ],
+  },
 }
