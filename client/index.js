@@ -1,10 +1,13 @@
 import 'isomorphic-fetch'
-import * as OfflinePluginRuntime from 'offline-plugin/runtime'
-OfflinePluginRuntime.install()
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware, compose } from 'redux';
+
+import * as OfflinePluginRuntime from 'offline-plugin/runtime'
+import { offline } from 'redux-offline'
+import offlineConfig from 'redux-offline/lib/defaults'
+
 import createSagaMiddleware, { END } from 'redux-saga';
 import { AppContainer } from 'react-hot-loader'
 
@@ -12,16 +15,18 @@ import rootReducer from './redux/rootReducer';
 import sagas from './redux/sagas';
 import App from './app';
 
+OfflinePluginRuntime.install()
 
 const rootEl = document.getElementById('root');
 
 const sagaMiddleware = createSagaMiddleware();
 const store = createStore(
-  rootReducer(),
+  rootReducer,
   window.__INITIAL_STATE__,
   compose(
     applyMiddleware(sagaMiddleware),
-    window && window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+    offline(offlineConfig),
+    // window && window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
   ),
 );
 
@@ -42,7 +47,7 @@ if (module.hot) {
 
   module.hot.accept('./redux/rootReducer', () => {
     const newRootReducer = require('./redux/rootReducer').default
-    store.replaceReducer(newRootReducer())
+    store.replaceReducer(newRootReducer)
   });
 
   module.hot.accept('./redux/sagas', () => {

@@ -21,20 +21,22 @@ if (process.env.NODE_ENV === 'development') {
   const cssHookConfig = {
     generateScopedName: '[name]__[local]',
     extensions: ['.scss', '.css'],
-    preprocessCss: data => sass.renderSync({
-      data
-    }).css
+    preprocessCss: data => sass.renderSync({ data }).css,
   };
 
   cssHookConfig.processCss = (css = '') => {
-    if (!global.inlineCss) global.inlineCss = '';
-    global.inlineCss += css;
-  };
+    if (!global.inlineCss) global.inlineCss = ''
+    global.inlineCss += css
+  }
 
   cssHook(cssHookConfig);
 
-
   const app = express();
+
+  app.use((req, res, next) => {
+    global.inlineCss = ' ';
+    next()
+  })
 
   app.use('/api/subreddit', subreddit)
 
@@ -65,7 +67,7 @@ if (process.env.NODE_ENV === 'development') {
   const compiler = webpack(configProd, () => {
 
     const app = express();
-    
+
     app.use('/', express.static(path.resolve(__dirname, '../dist')));
     app.use(renderMiddleware);
     app.listen(3000);

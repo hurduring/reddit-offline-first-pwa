@@ -19,11 +19,11 @@ const Routes = store => (
       path="/posts/:subreddit"
       getComponents={(nextState, cb) => {
         require.ensure([], (require) => {
-          const posts = require('./pages/posts/reducer').default
-          const postsSaga = require('./pages/posts/sagas').default
+          // const posts = require('./pages/posts/reducer').default
+          // const postsSaga = require('./pages/posts/sagas').default
 
-          store.runSaga(postsSaga)
-          store.replaceReducer(createRootReducer({ posts }))
+          // store.runSaga(postsSaga)
+          // store.replaceReducer(createRootReducer({ posts }))
 
           cb(null, require('./pages/posts').default)
         })

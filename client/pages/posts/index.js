@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router'
 
 import { actions } from './actions'
 import { selectPosts } from './selectors'
@@ -12,6 +13,7 @@ class Posts extends Component {
   render() {
     return (
       <div>
+        <p><Link to={'/'}>to home</Link></p>
         {this.props.posts.map(p => (
           <p key={p.id}>{p.title}</p>
         ))}

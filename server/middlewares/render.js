@@ -34,7 +34,7 @@ router.get('*', (req, res) => {
     const rootReducer = require('../../client/redux/rootReducer').default;
 
     const sagaMiddleware = createSagaMiddleware();
-    const store = createStore(rootReducer(), {}, applyMiddleware(sagaMiddleware));
+    const store = createStore(rootReducer, {}, applyMiddleware(sagaMiddleware));
     store.runSaga = sagaMiddleware.run
     sagaMiddleware.run(rootSaga);
 
