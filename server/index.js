@@ -38,11 +38,14 @@ if (process.env.NODE_ENV === 'development') {
     next()
   })
 
+  app.use('/', express.static(path.resolve(__dirname, '../static')))
+
   app.use('/api/subreddit', subreddit)
 
   app.use(devMiddleware(compiler, { noInfo: true, serverSideRender: true }));
   app.use(hotMiddleware(compiler));
   app.use(renderMiddleware);
+
 
 
   app.listen(3000);

@@ -4,10 +4,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware, compose } from 'redux';
 
-import * as OfflinePluginRuntime from 'offline-plugin/runtime'
+// import * as OfflinePluginRuntime from 'offline-plugin/runtime'
+// OfflinePluginRuntime.install()
+
 import { offline } from 'redux-offline'
 import offlineConfig from 'redux-offline/lib/defaults'
-
 import createSagaMiddleware, { END } from 'redux-saga';
 import { AppContainer } from 'react-hot-loader'
 
@@ -15,7 +16,13 @@ import rootReducer from './redux/rootReducer';
 import sagas from './redux/sagas';
 import App from './app';
 
-OfflinePluginRuntime.install()
+
+// sw registration
+navigator.serviceWorker.register('/sw.js', {
+  scope: '/'
+})
+// sw registration off
+
 
 const rootEl = document.getElementById('root');
 
@@ -25,8 +32,8 @@ const store = createStore(
   window.__INITIAL_STATE__,
   compose(
     applyMiddleware(sagaMiddleware),
+    window && window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
     offline(offlineConfig),
-    // window && window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
   ),
 );
 

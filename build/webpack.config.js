@@ -21,13 +21,13 @@ module.exports = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
-    new OfflinePlugin({
-      publicPath: '/',
-      externals: [
-        '/',
-        '/posts/frontend',
-      ],
-    })
+    // new OfflinePlugin({
+    //   publicPath: '/',
+    //   externals: [
+    //     '/',
+    //     '/posts/frontend',
+    //   ],
+    // })
   ],
   module: {
     noParse: /\.min\.js/,
