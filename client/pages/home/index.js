@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import s from './styles.css';
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 
 const Home = ({ counter }) => (
   <div className={s.root}>

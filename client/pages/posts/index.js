@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 
 import { actions } from './actions'
 import { selectPosts } from './selectors'
@@ -24,7 +24,7 @@ class Posts extends Component {
 
 const mstp = (state, ownProps) => ({
   posts: selectPosts(state),
-  subreddit: ownProps.params.subreddit,
+  subreddit: ownProps.match.params.subreddit,
 })
 
 Posts.propTypes = {

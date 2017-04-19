@@ -18,9 +18,9 @@ import App from './app';
 
 
 // sw registration
-navigator.serviceWorker.register('/sw.js', {
-  scope: '/'
-})
+// navigator.serviceWorker.register('/sw.js', {
+//   scope: '/'
+// })
 // sw registration off
 
 
