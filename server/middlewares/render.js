@@ -1,19 +1,51 @@
 import express from 'express'
+import React from 'react'
+import ReactDOMServer from 'react-dom/server'
+import { createStore } from 'redux';
+import { Provider } from 'react-redux'
+import { StaticRouter } from 'react-router'
 
-const router = express.Router();
-
-router.get('*', (req, res) => {
-
-  const html = `
+const htmlWrap = app => (
+  `
 <html>
 <head></head>  
 <body>
-<div id="root"></div>
+<div id="root">
+    ${app}
+</div>
 <script src="/main.js"></script>
 </body>
 </html>
 `
-  res.send(`<!doctype html>${html}`)
+)
+
+const router = express.Router();
+
+router.get('*', (req, res) => {
+  const Routes = require('../../client/routes').default
+  const rootReducer = require('../../client/redux/rootReducer').default
+
+  const context = {}
+
+  const store = createStore(rootReducer, {})
+
+  const markup = ReactDOMServer.renderToStaticMarkup(
+    <Provider store={store}>
+      <StaticRouter
+        location={req.url}
+        context={context}
+      >
+        <Routes />
+      </StaticRouter>
+    </Provider>
+  )
+
+  if (context.url) {
+    res.redirect(context.url)
+  } else {
+    res.send(`<!doctype html>${htmlWrap(markup)}`)
+  }
+
 })
 
 export default router

@@ -1,16 +1,28 @@
 import React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom'
+import { Route, Redirect, Switch } from 'react-router-dom'
 
 import Home from './pages/home';
 import Posts from './pages/posts'
 
+const RedirectWithStatus = ({ from, to, status }) => (
+  <Route
+    render={
+      ({ staticContext }) => {
+        if (staticContext) staticContext.status = status
+        return <Redirect from={from} to={to} />
+      }
+    }
+  />
+)
+
 const Routes = () => (
-  <BrowserRouter>
-    <div>
+  <div>
+    <Switch>
       <Route exact path="/" component={Home} />
       <Route path="/posts/:subreddit" component={Posts} />
-    </div>
-  </BrowserRouter>
+      <RedirectWithStatus from={'/derp'} to={'/kerp'} status={300} />
+    </Switch>
+  </div>
 )
 
 export default Routes
